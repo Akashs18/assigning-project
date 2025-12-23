@@ -11,27 +11,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// ---------------- SESSION ----------------
-const pgSession = require("connect-pg-simple")(session);
-
-app.use(
-  session({
-    store: new pgSession({
-      pool: pool,
-      tableName: "session"
-    }),
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 // 1 day
-    }
-  })
-);
-
-
 // ---------------- DATABASE ----------------
 const pool = new Pool({
   user: "firstdemo_examle_user",
@@ -47,6 +26,30 @@ pool.query("SELECT NOW()", (err, res) => {
   if (err) console.log(err);
   else console.log("DB Connected");
 });
+
+
+// ---------------- SESSION ----------------
+const pgSession = require("connect-pg-simple")(session);
+
+app.use(
+  session({
+    store: new pgSession({
+      pool,
+      tableName: "session"
+    }),
+    secret: process.env.SESSION_SECRET || "dev_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24
+    }
+  })
+);
+
+
+
 
 // ---------------- EMAIL ----------------
 const transporter = nodemailer.createTransport({
