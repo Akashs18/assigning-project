@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Assign Project</title>
+
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 0;
+  }
+
+  h2 {
+    text-align: center;
+    margin-top: 30px;
+    color: #2c3e50;
+  }
+
+  form {
+    max-width: 450px;
+    margin: 30px auto;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #3498db;
+  }
+
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  button:hover {
+    background-color: #2980b9;
+  }
+</style>
+
+</head>
+<body>
+
+<h2>Assign Project</h2>
+
+<form id="assign-form">
+  <label>Assign To</label>
+  <select id="assign-to" required>
+    <% employees.forEach(emp => { %>
+      <option value="<%= emp.id %>"><%= emp.username %></option>
+    <% }) %>
+  </select>
+
+  <label>Budget</label>
+  <input type="number" id="budget" required>
+
+  <label>Project Name</label>
+  <input type="text" id="project-name" required>
+
+  <label>Project Code</label>
+  <input type="text" id="project-code" required>
+
+  <label>Note</label>
+  <textarea id="additional-note"></textarea>
+
+  <button type="submit">Assign</button>
+</form>
+
+<script>
+document.getElementById("assign-form").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const res = await fetch("/assign", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      "assign-to": document.getElementById("assign-to").value,
+      budget: document.getElementById("budget").value,
+      "project-name": document.getElementById("project-name").value,
+      "project-code": document.getElementById("project-code").value,
+      "additional-note": document.getElementById("additional-note").value
+    })
+  });
+
+  const data = await res.json();
+  alert(data.message);
+});
+</script>
+
+</body>
+</html>

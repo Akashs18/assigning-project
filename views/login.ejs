@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body { font-family: Arial; background: #f4f6f9; display: flex; justify-content: center; padding-top: 100px; }
+    form { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 300px; display: flex; flex-direction: column; }
+    label { margin-top: 15px; font-weight: bold; }
+    input { padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; width: 100%; }
+    button { margin-top: 20px; padding: 10px; background: #007bff; color: #fff; border: none; cursor: pointer; }
+    .error { color: red; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <form method="POST" action="/login">
+    <h2>Login</h2>
+    <label>Email</label>
+    <input type="email" name="email" required>
+    <label>Password</label>
+    <input type="password" name="password" required>
+    <button type="submit">Login</button>
+    <% if(error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+  </form>
+</body>
+</html>
