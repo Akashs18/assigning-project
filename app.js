@@ -12,13 +12,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // ---------------- SESSION ----------------
+const pgSession = require("connect-pg-simple")(session);
+
 app.use(
   session({
-    secret: "secret_key_123",
+    store: new pgSession({
+      pool: pool,
+      tableName: "session"
+    }),
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 // 1 day
+    }
   })
 );
+
 
 // ---------------- DATABASE ----------------
 const pool = new Pool({
@@ -145,6 +157,9 @@ app.get("/logout", (req, res) => {
 });
 
 // ---------------- SERVER ----------------
-app.listen(4000, () => {
-  console.log("Server running on http://localhost:4000");
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
+
+
