@@ -1,81 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Assign Project</title>
+  <title>Assign Project</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
 
-<style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f6f8;
-    margin: 0;
-    padding: 0;
-  }
+    h2 {
+      text-align: center;
+      margin-top: 30px;
+      color: #2c3e50;
+    }
 
-  h2 {
-    text-align: center;
-    margin-top: 30px;
-    color: #2c3e50;
-  }
+    /* Form Container */
+    form {
+      max-width: 500px;
+      margin: 30px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
 
-  form {
-    max-width: 450px;
-    margin: 30px auto;
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
 
-  label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-  }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
 
-  input,
-  select,
-  textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    box-sizing: border-box;
-  }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    }
 
-  textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
 
-  input:focus,
-  select:focus,
-  textarea:focus {
-    outline: none;
-    border-color: #3498db;
-  }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 15px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
 
-  button {
-    margin-top: 20px;
-    width: 100%;
-    padding: 12px;
-    background-color: #3498db;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
+    button:hover {
+      background-color: #2980b9;
+    }
 
-  button:hover {
-    background-color: #2980b9;
-  }
-</style>
-
+    /* Responsive */
+    @media (max-width: 600px) {
+      form {
+        margin: 20px;
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -107,10 +113,9 @@
 <script>
 document.getElementById("assign-form").addEventListener("submit", async e => {
   e.preventDefault();
-
   const res = await fetch("/assign", {
     method: "POST",
-    headers: {"Content-Type":"application/json"},
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       "assign-to": document.getElementById("assign-to").value,
       budget: document.getElementById("budget").value,
@@ -121,7 +126,7 @@ document.getElementById("assign-form").addEventListener("submit", async e => {
   });
 
   const data = await res.json();
-  alert(data.message);
+  alert(data.message || (data.success ? "Project Assigned!" : "Error assigning project"));
 });
 </script>
 

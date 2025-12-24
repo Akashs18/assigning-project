@@ -1,72 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Dashboard</title>
-
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f6f8;
-  }
-
-  /* Sidebar */
-  .sidebar {
-    width: 220px;
-    height: 100vh;
-    background-color: #2c3e50;
-    color: #ffffff;
-    position: fixed;
-    left: 0;
-    top: 0;
-    padding-top: 20px;
-  }
-
-  .logo {
-    padding: 15px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    border-bottom: 1px solid #3e556e;
-  }
-
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .sidebar ul li {
-    margin: 0;
-  }
-
-  .sidebar ul li a {
-    display: block;
-    padding: 12px 20px;
-    color: #ecf0f1;
-    text-decoration: none;
-    transition: background 0.3s;
-  }
-
-  .sidebar ul li a:hover {
-    background-color: #34495e;
-  }
-
-  /* Content */
-  .content {
-    margin-left: 220px;
-    padding: 30px;
-  }
-
-  .content h2 {
-    margin-top: 0;
-    color: #2c3e50;
-  }
-
-  .content p {
-    color: #555;
-  }
-</style>
-
+  <title>Dashboard</title>
+  <style>
+    body { margin:0; font-family:Arial, Helvetica, sans-serif; background:#f4f6f8; }
+    .sidebar {
+      width:220px; height:100vh; background:#2c3e50; color:#fff; position:fixed; top:0; left:0; padding-top:20px;
+    }
+    .logo { padding:15px 20px; font-size:16px; font-weight:bold; border-bottom:1px solid #3e556e; }
+    .sidebar ul { list-style:none; padding:0; margin:0; }
+    .sidebar ul li { margin:0; }
+    .sidebar ul li a { display:block; padding:12px 20px; color:#ecf0f1; text-decoration:none; transition:0.3s; }
+    .sidebar ul li a:hover { background:#34495e; }
+    .content { margin-left:220px; padding:30px; }
+    .content h2 { margin-top:0; color:#2c3e50; }
+    .content p { color:#555; }
+  </style>
 </head>
 <body>
 
@@ -74,9 +23,11 @@
   <div class="logo">
     Welcome <%= username || "User" %> (<%= role || "Guest" %>)
   </div>
-
   <ul>
-    <li><a href="/assign">Assign Project</a></li>
+    <% if(role === "MD") { %>
+      <li><a href="/assign">Assign Project</a></li>
+    <% } %>
+    <li><a href="/report">View Reports</a></li>
     <li><a href="/logout">Logout</a></li>
   </ul>
 </div>
