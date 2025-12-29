@@ -1,97 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Assign Project</title>
-  <style>
-    /* Global Styles */
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #f4f6f8;
-      margin: 0;
-      padding: 0;
-    }
-
-    h2 {
-      text-align: center;
-      margin-top: 30px;
-      color: #2c3e50;
-    }
-
-    /* Form Container */
-    form {
-      max-width: 500px;
-      margin: 30px auto;
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-      box-sizing: border-box;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    button {
-      margin-top: 20px;
-      width: 100%;
-      padding: 15px;
-      background-color: #3498db;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #2980b9;
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      form {
-        margin: 20px;
-        padding: 20px;
-      }
-    }
-  </style>
+<title>Assign Project</title>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f4f6f8;
+}
+form{
+  width:420px;
+  margin:50px auto;
+  background:#fff;
+  padding:25px;
+  border-radius:6px;
+  box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+h3{text-align:center}
+input,select,textarea,button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+}
+button{
+  background:#3498db;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+  font-size:15px;
+}
+button:hover{background:#2980b9}
+</style>
 </head>
 <body>
 
-<h2>Assign Project</h2>
+<form id="assignForm">
+  <h3>Assign Project</h3>
 
-<form id="assign-form">
   <label>Assign To</label>
-  <select id="assign-to" required>
-    <% employees.forEach(emp => { %>
-      <option value="<%= emp.id %>"><%= emp.username %></option>
+  <select id="assignTo" required>
+    <% employees.forEach(e=>{ %>
+      <option value="<%= e.id %>"><%= e.username %></option>
     <% }) %>
   </select>
 
@@ -99,34 +47,37 @@
   <input type="number" id="budget" required>
 
   <label>Project Name</label>
-  <input type="text" id="project-name" required>
+  <input type="text" id="projectName" required>
 
   <label>Project Code</label>
-  <input type="text" id="project-code" required>
+  <input type="text" id="projectCode" required>
 
   <label>Note</label>
-  <textarea id="additional-note"></textarea>
+  <textarea id="note"></textarea>
 
   <button type="submit">Assign</button>
 </form>
 
 <script>
-document.getElementById("assign-form").addEventListener("submit", async e => {
+document.getElementById("assignForm").addEventListener("submit", async function(e){
   e.preventDefault();
-  const res = await fetch("/assign", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      "assign-to": document.getElementById("assign-to").value,
-      budget: document.getElementById("budget").value,
-      "project-name": document.getElementById("project-name").value,
-      "project-code": document.getElementById("project-code").value,
-      "additional-note": document.getElementById("additional-note").value
-    })
+
+  const payload = {
+    "assign-to": document.getElementById("assignTo").value,
+    budget: document.getElementById("budget").value,
+    "project-name": document.getElementById("projectName").value,
+    "project-code": document.getElementById("projectCode").value,
+    "additional-note": document.getElementById("note").value
+  };
+
+  const res = await fetch("/assign",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify(payload)
   });
 
   const data = await res.json();
-  alert(data.message || (data.success ? "Project Assigned!" : "Error assigning project"));
+  alert(data.message || "Assigned successfully");
 });
 </script>
 

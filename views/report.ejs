@@ -1,168 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Project Report</title>
+  <title>Report</title>
   <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #f4f6f8;
-      margin: 0;
-      padding: 0;
-    }
-
-    h2 {
-      text-align: center;
-      margin-top: 30px;
-      color: #2c3e50;
-    }
-
-    a.download-btn {
-      display: inline-block;
-      margin: 15px auto;
-      padding: 10px 20px;
-      background-color: #3498db;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-
-    a.download-btn:hover {
-      background-color: #2980b9;
-    }
-
-    table {
-      width: 90%;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    }
-
-    th, td {
-      padding: 12px 15px;
-      text-align: center;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #3498db;
-      color: white;
-      font-weight: bold;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    tr:hover {
-      background-color: #f1f1f1;
-    }
-
-    /* Buttons */
-    button {
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-    }
-
-    button.accept {
-      background-color: #27ae60;
-      color: white;
-    }
-
-    button.hold {
-      background-color: #e67e22;
-      color: white;
-    }
-
-    button.reject {
-      background-color: #c0392b;
-      color: white;
-    }
+    table { width:100%; border-collapse:collapse }
+    th,td { border:1px solid #ccc; padding:8px }
+    button { margin:2px }
   </style>
 </head>
 <body>
 
-<h2>Project Assignments</h2>
-<div style="text-align:center;">
-  <a href="/report/download" class="download-btn">Download PDF</a>
-</div>
+<h2>Assignments</h2>
 
 <table>
-  <thead>
-    <tr>
-      <th>No</th>
-      <th>Employee</th>
-      <th>Project</th>
-      <th>Code</th>
-      <th>Budget</th>
-      <th>Note</th>
-      <th>Status</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% assignments.forEach((a, i) => { %>
-      <tr>
-        <td><%= i + 1 %></td>
-        <td><%= a.employee %></td>
-        <td><%= a.project_name %></td>
-        <td><%= a.project_code %></td>
-        <td><%= a.budget %></td>
-        <td><%= a.note || '-' %></td>
-        <td><%= a.status %></td>
-        <td>
-          <% if(role !== 'MD' && a.status === 'Pending'){ %>
-            <button class="accept" onclick='updateStatus(<%= a.id %>, "Accepted")'>Accept</button>
-            <button class="hold" onclick='updateStatus(<%= a.id %>, "On Hold")'>Hold</button>
-            <button class="reject" onclick='updateStatus(<%= a.id %>, "Rejected")'>Reject</button>
-          <% } %>
-        </td>
-      </tr>
-    <% }) %>
-  </tbody>
+<tr>
+  <th>Employee</th>
+  <th>Project</th>
+  <th>Status</th>
+  <th>Action</th>
+</tr>
+
+<% assignments.forEach(a => { %>
+<tr>
+  <td><%= a.employee %></td>
+  <td><%= a.project_name %></td>
+  <td><%= a.status %></td>
+  <td>
+    <% if(role !== 'MD' && a.status === 'Pending'){ %>
+      <form method="POST" action="/update-status">
+        <input type="hidden" name="assignmentId" value="<%= a.id %>">
+        <button name="status" value="Accepted">Accept</button>
+        <button name="status" value="On Hold">Hold</button>
+        <button name="status" value="Rejected">Reject</button>
+      </form>
+    <% } %>
+  </td>
+</tr>
+<% }) %>
+
 </table>
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-  const socket = io();
-
-  // MD socket registration for push notifications
-  <% if(role === 'MD'){ %>
-    socket.emit("registerMD","<%= userId %>");
-    socket.on("statusUpdated", data => {
-      alert(`Employee ${data.employee} updated project "${data.project}" to status: ${data.status}`);
-    });
-  <% } %>
-
-  // Employee status update
-  async function updateStatus(id, status){
-    try {
-      const res = await fetch("/update-status", { 
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assignmentId: id, status })
-      });
-      const data = await res.json();
-      alert(data.message);
-      location.reload(); // refresh table
-    } catch(err) {
-      alert("Error updating status");
-      console.error(err);
-    }
-  }
-</script>
 
 </body>
 </html>
