@@ -114,8 +114,10 @@ app.post("/assign", isLoggedIn, isMD, async (req, res) => {
   });
 
   subs.rows.forEach(s =>
-    webpush.sendNotification(s.subscription, payload).catch(() => {})
-  );
+    webpush.sendNotification(s.subscription, payload)
+  .catch(err => console.error("Push error:", err))
+);
+
 
   res.json({ message: "Project Assigned Successfully" });
 });

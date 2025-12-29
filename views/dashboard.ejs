@@ -15,5 +15,44 @@
   <li><a href="/logout">Logout</a></li>
 </ul>
 
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/service-worker.js")
+    .then(() => console.log("Service Worker registered"))
+    .catch(err => console.error("SW error:", err));
+}
+</script>
+
+
+<script>
+const publicKey = "BHDI3OEuwpmcJ9hNAMKq39kgR79uTW-1W5HhWdkXI5oG399EDM7piZb6VRomYGv8xvyFbp-mI2n7NaefIfY0FWc";
+
+async function subscribeUser() {
+  const reg = await navigator.serviceWorker.ready;
+
+  const sub = await reg.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: publicKey
+  });
+
+  await fetch("/save-subscription", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(sub)
+  });
+
+  console.log("Push subscription saved");
+}
+
+Notification.requestPermission().then(permission => {
+  if (permission === "granted") {
+    subscribeUser();
+  }
+});
+</script>
+
+
+
 </body>
 </html>
