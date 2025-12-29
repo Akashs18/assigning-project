@@ -172,6 +172,21 @@ app.post("/update-status", isLoggedIn, async (req, res) => {
 });
 
 
+//
+app.post("/save-subscription", isLoggedIn, async (req, res) => {
+  console.log('Session user:', req.session.user); // Should exist
+  console.log('Subscription payload:', req.body);
+  await pool.query(
+    `INSERT INTO push_subscriptions(user_id, subscription)
+     VALUES ($1,$2)
+     ON CONFLICT (user_id) DO UPDATE SET subscription=$2`,
+    [req.session.user.id, JSON.stringify(req.body)]
+  );
+  res.json({ success: true });
+});
+
+
+
 // LOGOUT
 app.get("/logout", (req, res) => {
   req.session.destroy(() => res.redirect("/"));
